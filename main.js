@@ -128,7 +128,7 @@ Polygon.prototype.moveToPosition = function(position) {
 	ctx.fill();
 
 	ctx.strokeStyle = this.lineColour;
-	ctx.lineWidth = 1;
+	ctx.lineWidth = 4;
 	ctx.stroke();
 };
 
@@ -143,8 +143,6 @@ function Particle(vector,position,shapeType) {
 	this.shapeType = shapeType;
 	this.coefficient = 0.98;
 }
-
-
 
 
 
@@ -181,6 +179,21 @@ function gameLoop()
 	updatePosition();
 	setTimeout("gameLoop()",10);
 }
+
+
+
+
+
+$("#canvas").click(function(e) {
+  
+  var posX = 0, posY = 0;
+  mouse = new Vector(((e.pageX+posX) - (allGameObjects[2].position.x))/35,
+  	((e.pageY+posY) - (allGameObjects[2].position.y))/35);
+  allGameObjects[2].vector.add(mouse);
+
+});
+
+
 
 
 allGameObjects[0] = new Particle(new Vector(10,10), new Position(300,100), new Circle(30,'#ff9933','#000'));
