@@ -15,8 +15,10 @@ var rightPressed = 0;
 
 
 var level = new LevelOne();
+
+
 var clicker = new Particle(new Vector(0,0), new Position(0,0), new Xspot(5,'#f10','#000'));
-var aimLaser = new Particle(new Vector(0,0), new Position(0,0), new Line(10, new Position(0,0), '#f10','#f10'));
+var aimLaser = new Particle(new Vector(0,0), new Position(0,0), new Line(1, new Position(0,0), '#f10','#f10'));
 var clicking = false;
 clicker.isMovable = false;
 aimLaser.isMovable = false;
@@ -28,6 +30,11 @@ canvas.height = window.innerHeight;
 
 
 function LevelOne() {
+	this.bk1 = document.createElement("img");
+	this.bk1.src = "images/tunnel.png";
+
+	this.bk2 = document.createElement("img");
+	this.bk2.src = "images/bkIso.png";
 }
 
 LevelOne.prototype.clearLevel = function() {
@@ -35,9 +42,10 @@ LevelOne.prototype.clearLevel = function() {
 
 LevelOne.prototype.drawLevel = function() {
 	ctx.beginPath();
-	ctx.rect(0,0,canvas.width,canvas.height);
-	ctx.fillStyle = '#ccc';
-	ctx.fill();
+	var pattern = ctx.createPattern(this.bk2, "repeat");
+    ctx.fillStyle = pattern;
+    ctx.fillRect(0, 0, canvas.width,canvas.height);
+	ctx.drawImage(this.bk1,0,0,canvas.width,canvas.height);
 };
 
 
@@ -545,8 +553,11 @@ $("#canvas").mouseup(function(e) {
 	var posX = 0, posY = 0;
 	mouse = new Vector(((e.pageX+posX) - (allGameObjects[1].position.x))/14,
 		((e.pageY+posY) - (allGameObjects[1].position.y))/14);
+	mouseBack = new Vector(  -1*(((e.pageX+posX) - (allGameObjects[1].position.x))/60),
+		-1*(((e.pageY+posY) - (allGameObjects[1].position.y))/60) );
 	allGameObjects[2].position = allGameObjects[1].position;
 	allGameObjects[2].vector.add(mouse);
+	allGameObjects[1].vector.add(mouseBack);
 	clicker.position = new Position(e.pageX+posX,e.pageY+posY);
 	clicker.shapeType = new Xspot(5,'#f10','#000');
 	allGameObjects[3] = clicker;
@@ -579,7 +590,7 @@ function drawLaser(pos)
 	{
 		var posX = 0, posY = 0;
 		aimLaser.position = new Position(pos.x+posX,pos.y+posY);
-		aimLaser.shapeType = new Line(0, allGameObjects[1].position, '#f10','#f10');
+		aimLaser.shapeType = new Line(1, allGameObjects[1].position, '#f10','#f10');
 		allGameObjects[4] = aimLaser;		
 	}
 	else
@@ -667,7 +678,8 @@ $('body').keyup(function(e)
 
 
 allGameObjects[0] = new Particle(new Vector(10,10), new Position(300,100), new Circle(30,'#ff9933','#000'));
-allGameObjects[1] = new Particle(new Vector(10,-10), new Position(300,100), new Rectangle(30,30,'#009910','#000'));
+allGameObjects[1] = new Particle(new Vector(10,-10), new Position(300,100),  new Polygon(20,3,'#f10','#000'));
+allGameObjects[1].coefficient = 0.92;
 allGameObjects[2] = new Particle(new Vector(-2,10), new Position(300,100), new Polygon(30,6,'#0022ff','#000'));
 allGameObjects[4] = aimLaser;
 gameLoop();
